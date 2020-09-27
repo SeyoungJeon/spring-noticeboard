@@ -41,23 +41,22 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/board/write", method=RequestMethod.POST)
-	public String write(@Valid BoardVO boardVO, BindingResult bindingResult) {
+	public String write(@Valid BoardVO boardVO, BindingResult bindingResult, SessionStatus sessionStatus) {
 		if(bindingResult.hasErrors()) {
 			return "/board/write";
 		} else {
 			boardService.write(boardVO);
+			sessionStatus.setComplete();
 			return "redirect:/board/list";			
 		}
 	}
 	
-	@RequestMapping(value="/board/edit/{seq}", method=RequestMethod.GET)
-	public String edit(@PathVariable int seq, Model model) {
-		BoardVO boardVO = boardService.read(seq);
-		model.addAttribute("boardVO", boardVO);
+	@RequestMapping(value="/board/edit", method=RequestMethod.GET)
+	public String edit(@ModelAttribute BoardVO boardVO) {
 		return "/board/edit";
 	}
 	
-	@RequestMapping(value="/board/edit/{seq}", method=RequestMethod.POST)
+	@RequestMapping(value="/board/edit", method=RequestMethod.POST)
 	public String edit(@Valid @ModelAttribute BoardVO boardVO, BindingResult bindingResult, int pwd, SessionStatus sessionStatus, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "/board/edit";
